@@ -1,0 +1,10 @@
+{% extends 'movies/base.html' %}
+{% block title %}Genre: {{ genre.name }}{% endblock %}
+
+{% block content %}
+<h1>Genre: {{ genre.name }}</h1>
+
+<a href="{% url 'genre_edit' genre.pk %}" class="btn btn-primary">Edit</a>
+<a href="{% url 'genre_delete' genre.pk %}" class="btn btn-danger">Delete</a>
+<a href="{% url 'genre_list' %}" class="btn btn-secondary">Back to list</a>
+{% endblock %}
