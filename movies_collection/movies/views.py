@@ -2,6 +2,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Genre, Director, Movie
 from .forms import GenreForm, DirectorForm, MovieForm
+from django.db.models import Q
 
 # ---------------------------
 # GENRE VIEWS
@@ -76,6 +77,35 @@ class MovieListView(ListView):
     template_name = 'movies/movie_list.html'
     context_object_name = 'movies'
 
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        sort = self.request.GET.get('sort')
+        direction = self.request.GET.get('direction', 'asc')  # default: ზრდადი
+        qs = super().get_queryset()
+
+        if query:
+            qs = qs.filter(
+                Q(title__icontains=query) |
+                Q(description__icontains=query) |
+                Q(genre__name__icontains=query) |
+                Q(director__name__icontains=query)
+            )
+
+        if sort in ['title', 'release_year', 'genre', 'director']:
+            if sort == 'genre':
+                order_field = 'genre__name'
+            elif sort == 'director':
+                order_field = 'director__name'
+            else:
+                order_field = sort
+
+            if direction == 'desc':
+                order_field = '-' + order_field
+
+            qs = qs.order_by(order_field)
+
+        return qs
+
 class MovieDetailView(DetailView):
     model = Movie
     template_name = 'movies/movie_detail.html'
@@ -101,3 +131,4 @@ class MovieDeleteView(DeleteView):
     model = Movie
     template_name = 'movies/movie_confirm_delete.html'
     success_url = reverse_lazy('movie_list')
+

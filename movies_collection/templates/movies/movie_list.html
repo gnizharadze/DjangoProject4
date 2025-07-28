@@ -4,6 +4,26 @@
 {% block content %}
 <h1>Movies</h1>
 <a href="{% url 'movie_add' %}" class="btn btn-primary mb-3">Add New Movie</a>
+
+<!-- საძიებო ველი -->
+<form method="GET" class="mb-3">
+  <input type="text" name="q" placeholder="Search movies..." value="{{ request.GET.q }}">
+  <button type="submit">Search</button>
+</form>
+
+<!-- სორტირება -->
+<div class="mb-3">
+  <strong>Sort by:</strong>
+  <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=title&direction=asc">Title ↑</a> |
+  <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=title&direction=desc">Title ↓</a> |
+  <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=release_year&direction=asc">Year ↑</a> |
+  <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=release_year&direction=desc">Year ↓</a> |
+  <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=genre&direction=asc">Genre ↑</a> |
+  <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=genre&direction=desc">Genre ↓</a> |
+  <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=director&direction=asc">Director ↑</a> |
+  <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=director&direction=desc">Director ↓</a>
+</div>
+
 <table class="table table-striped">
   <thead>
     <tr>
