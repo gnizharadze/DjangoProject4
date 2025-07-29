@@ -2,12 +2,65 @@
 {% block title %}Director: {{ director.name }}{% endblock %}
 
 {% block content %}
-<h1>Director: {{ director.name }}</h1>
+<div class="card shadow-sm mt-4">
+    <div class="card-header bg-info text-white">
+        <h1 class="mb-0">Director: {{ director.name }}</h1>
+    </div>
+    <div class="card-body">
+        <p class="lead"><strong>Birth Date:</strong> {{ director.birth_date|default:"N/A" }}</p>
+        <p class="lead"><strong>Nationality:</strong> {{ director.nationality|default:"N/A" }}</p>
+        {# You could add a list of movies by this director here if you pass them from the view #}
+        {# Example: #}
+        {# {% if director.movie_set.all %} #}
+        {#    <h5>Movies by this director:</h5> #}
+        {#    <ul> #}
+        {#        {% for movie in director.movie_set.all %} #}
+        {#            <li><a href="{% url 'movies:movie_detail' movie.pk %}">{{ movie.title }}</a></li> #}
+        {#        {% endfor %} #}
+        {#    </ul> #}
+        {# {% else %} #}
+        {#    <p class="text-muted">No movies currently listed for this director.</p> #}
+        {# {% endif %} #}
+    </div>
+    <div class="card-footer d-flex justify-content-end">
+        <a href="{% url 'movies:director_edit' director.pk %}" class="btn btn-primary mr-2">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        <a href="{% url 'movies:director_delete' director.pk %}" class="btn btn-danger mr-2">
+            <i class="fas fa-trash-alt"></i> Delete
+        </a>
+        <a href="{% url 'movies:director_list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-alt-circle-left"></i> Back to list
+        </a>
+    </div>
+</div>
 
-<p><strong>Birth Date:</strong> {{ director.birth_date }}</p>
-<p><strong>Nationality:</strong> {{ director.nationality }}</p>
-
-<a href="{% url 'director_edit' director.pk %}" class="btn btn-primary">Edit</a>
-<a href="{% url 'director_delete' director.pk %}" class="btn btn-danger">Delete</a>
-<a href="{% url 'director_list' %}" class="btn btn-secondary">Back to list</a>
+<style>
+    /* Custom styles for director detail page */
+ .card {
+        max-width: 700px; /* Limit width for better readability */
+        margin-left: auto;
+        margin-right: auto;
+        border: none;
+    }
+ .card-header {
+        border-bottom: none;
+        border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
+        padding: 1.5rem;
+    }
+ .card-body {
+        padding: 2rem;
+    }
+ .card-footer {
+        background-color: #f8f9fa;
+        border-top: 1px solid #e9ecef;
+        padding: 1rem 2rem;
+    }
+ .lead {
+        margin-bottom: 1.5rem;
+    }
+ .btn i {
+        margin-right: 0.5rem;
+    }
+</style>
 {% endblock %}

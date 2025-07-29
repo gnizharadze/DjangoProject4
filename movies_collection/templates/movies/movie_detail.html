@@ -2,18 +2,79 @@
 {% block title %}{{ movie.title }}{% endblock %}
 
 {% block content %}
-<h1>{{ movie.title }} ({{ movie.release_year }})</h1>
+<div class="card shadow-sm">
+    <div class="card-header bg-info text-white">
+        <h1 class="mb-0">{{ movie.title }} ({{ movie.release_year }})</h1>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4 text-center">
+                {% if movie.poster %}
+                    <img src="{{ movie.poster.url }}" alt="{{ movie.title }} poster" class="img-fluid rounded shadow-sm mb-3" style="max-width: 300px;">
+                {% else %}
+                    <div class="poster-placeholder-detail d-flex align-items-center justify-content-center bg-light border rounded shadow-sm mb-3" style="width: 250px; height: 375px; margin: 0 auto; font-size: 5rem; color: #ccc;">
+                        🎬
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-md-8">
+                <p class="lead"><strong>Genre:</strong> <span class="badge badge-secondary">{{ movie.genre }}</span></p>
+                <p class="lead"><strong>Director:</strong> <span class="badge badge-info">{{ movie.director }}</span></p>
+                <hr>
+                <h4>Description:</h4>
+                <p>{{ movie.description|linebreaks }}</p>
+                <p><strong>Watched:</strong>
+                    {% if movie.watched %}
+                        <span class="badge badge-success">Yes ✓</span>
+                    {% else %}
+                        <span class="badge badge-warning">No</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer d-flex justify-content-end">
+        <a href="{% url 'movies:movie_edit' movie.pk %}" class="btn btn-primary mr-2">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        <a href="{% url 'movies:movie_delete' movie.pk %}" class="btn btn-danger mr-2">
+            <i class="fas fa-trash-alt"></i> Delete
+        </a>
+        <a href="{% url 'movies:movie_list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-alt-circle-left"></i> Back to list
+        </a>
+    </div>
+</div>
 
-{% if movie.poster %}
-  <img src="{{ movie.poster.url }}" alt="{{ movie.title }} poster" class="img-fluid mb-3" style="max-width: 300px;">
-{% endif %}
-
-<p><strong>Genre:</strong> {{ movie.genre }}</p>
-<p><strong>Director:</strong> {{ movie.director }}</p>
-<p><strong>Description:</strong> {{ movie.description|linebreaks }}</p>
-<p><strong>Watched:</strong> {% if movie.watched %}Yes{% else %}No{% endif %}</p>
-
-<a href="{% url 'movie_edit' movie.pk %}" class="btn btn-primary">Edit</a>
-<a href="{% url 'movie_delete' movie.pk %}" class="btn btn-danger">Delete</a>
-<a href="{% url 'movie_list' %}" class="btn btn-secondary">Back to list</a>
+<style>
+    /* Custom styles for movie detail page */
+   .card {
+        margin-top: 2rem;
+        border: none;
+    }
+   .card-header {
+        border-bottom: none;
+        border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
+        padding: 1.5rem;
+    }
+   .card-body {
+        padding: 2rem;
+    }
+   .card-footer {
+        background-color: #f8f9fa;
+        border-top: 1px solid #e9ecef;
+        padding: 1rem 2rem;
+    }
+   .badge {
+        font-size: 1rem;
+        padding: 0.5em 0.75em;
+    }
+   .poster-placeholder-detail {
+        border: 2px dashed #dee2e6;
+        border-radius: 8px;
+    }
+   .btn i {
+        margin-right: 0.5rem;
+    }
+</style>
 {% endblock %}

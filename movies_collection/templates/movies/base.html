@@ -9,15 +9,16 @@
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-    <img src="{% static 'images/movies-logo.png' %}" alt="Movies Logo" width="100" height="auto"/>
-  <a class="navbar-brand" href="{% url 'movie_list' %}">Movie Library</a>
-  <div class="navbar-nav">
-    <a class="nav-item nav-link" href="{% url 'movie_list' %}">Movies</a>
-    <a class="nav-item nav-link" href="{% url 'genre_list' %}">Genres</a>
-    <a class="nav-item nav-link" href="{% url 'director_list' %}">Directors</a>
+
+  <a class="navbar-brand" href="{% url 'movies:movie_list' %}">Movie Library</a>
+  <div class="navbar-nav ml-auto">
+    <a class="nav-item nav-link" href="{% url 'movies:movie_list' %}">Movies</a>
+    <a class="nav-item nav-link" href="{% url 'movies:genre_list' %}">Genres</a>
+    <a class="nav-item nav-link" href="{% url 'movies:director_list' %}">Directors</a>
   </div>
 </nav>
 

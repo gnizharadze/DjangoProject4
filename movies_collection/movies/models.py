@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Genre model
 class Genre(models.Model):
@@ -39,6 +40,8 @@ class Movie(models.Model):
     description = models.TextField(blank=True)
     poster = models.ImageField(upload_to='posters/', blank=True, null=True)
     watched = models.BooleanField(default=False)
+
+
 
     def __str__(self):
         return f"{self.title} ({self.release_year})"

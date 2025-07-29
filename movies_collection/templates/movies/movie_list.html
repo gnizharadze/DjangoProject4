@@ -2,37 +2,235 @@
 {% block title %}Movies{% endblock %}
 
 {% block content %}
-<h1>Movies</h1>
-<a href="{% url 'movie_add' %}" class="btn btn-primary mb-3">Add New Movie</a>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Year</th>
-      <th>Genre</th>
-      <th>Director</th>
-      <th>Watched</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for movie in movies %}
-    <tr>
-      <td><a href="{% url 'movie_detail' movie.pk %}">{{ movie.title }}</a></td>
-      <td>{{ movie.release_year }}</td>
-      <td>{{ movie.genre }}</td>
-      <td>{{ movie.director }}</td>
-      <td>{% if movie.watched %}✔️{% else %}❌{% endif %}</td>
-      <td>
-        <a href="{% url 'movie_edit' movie.pk %}" class="btn btn-sm btn-secondary">Edit</a>
-        <a href="{% url 'movie_delete' movie.pk %}" class="btn btn-sm btn-danger">Delete</a>
-      </td>
-    </tr>
-    {% empty %}
-    <tr>
-      <td colspan="6">No movies found.</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+{% if user.is_authenticated %}
+    <div class="header-section mb-4">
+        <div>
+            <h1>Welcome, {{ user.username }}!</h1>
+            <p class="text-muted">Here are your movies</p>
+        </div>
+        <a href="{% url 'movies:movie_add' %}" class="btn btn-primary">Add New Movie</a>
+    </div>
+
+<!-- საძიებო ველი -->
+<form method="GET" class="mb-3">
+  <input type="text" name="q" placeholder="Search movies..." value="{{ request.GET.q }}">
+  <button type="submit">Search</button>
+</form>
+
+<!-- სორტირება -->
+<div class="mb-3">
+  <strong>Sort by:</strong>
+  <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=title&direction=asc">Title ↑</a> |
+  <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=title&direction=desc">Title ↓</a> |
+  <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=release_year&direction=asc">Year ↑</a> |
+  <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=release_year&direction=desc">Year ↓</a> |
+  <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=genre&direction=asc">Genre ↑</a> |
+  <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=genre&direction=desc">Genre ↓</a> |
+  <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=director&direction=asc">Director ↑</a> |
+  <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=director&direction=desc">Director ↓</a>
+</div>
+
+    {% if movies %}
+        <div class="movies-grid">
+            {% for movie in movies %}
+            <div class="movie-card">
+                <div class="movie-poster">
+                    <div class="poster-placeholder">🎬</div>
+                </div>
+
+                <div class="movie-info">
+                    <h3 class="movie-title">
+                        <a href="{% url 'movies:movie_detail' movie.pk %}">{{ movie.title }}</a>
+                    </h3>
+
+                    <div class="movie-details">
+                        <p><strong>Year:</strong> {{ movie.release_year }}</p>
+                        <p><strong>Genre:</strong> {{ movie.genre }}</p>
+                        <p><strong>Director:</strong> {{ movie.director }}</p>
+                        <p><strong>Status:</strong>
+                            {% if movie.watched %}
+                                <span class="status-watched">Watched ✓</span>
+                            {% else %}
+                                <span class="status-unwatched">Not Watched</span>
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <div class="movie-actions">
+                        <a href="{% url 'movies:movie_edit' movie.pk %}" class="btn btn-secondary btn-sm">Edit</a>
+                        <a href="{% url 'movies:movie_delete' movie.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="no-movies">
+            <h3>No movies yet!</h3>
+            <p>Start building your collection.</p>
+            <a href="{% url 'movies:movie_add' %}" class="btn btn-primary">Add Your First Movie</a>
+        </div>
+    {% endif %}
+
+{% else %}
+    <div class="auth-required">
+        <div class="auth-card">
+            <h2>🎬 Movie Library</h2>
+            <p>Please login to view and manage your movie collection.</p>
+            <a href="{% url 'login' %}" class="btn btn-primary btn-lg">Login to Continue</a>
+        </div>
+    </div>
+{% endif %}
+
+<style>
+/* Clean, readable styles */
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.header-section h1 {
+    margin-bottom: 0.5rem;
+}
+
+.movies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.movie-card {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.movie-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.movie-poster {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.poster-placeholder {
+    width: 80px;
+    height: 120px;
+    background: #f8f9fa;
+    border: 2px dashed #dee2e6;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto;
+}
+
+.movie-title {
+    margin-bottom: 1rem;
+}
+
+.movie-title a {
+    color: #333;
+    text-decoration: none;
+}
+
+.movie-title a:hover {
+    color: #007bff;
+    text-decoration: underline;
+}
+
+.movie-details {
+    margin-bottom: 1.5rem;
+}
+
+.movie-details p {
+    margin-bottom: 0.5rem;
+    color: #666;
+}
+
+.status-watched {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.status-unwatched {
+    color: #6c757d;
+}
+
+.movie-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.no-movies {
+    text-align: center;
+    padding: 3rem 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.no-movies h3 {
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.no-movies p {
+    color: #999;
+    margin-bottom: 1.5rem;
+}
+
+/* Auth required section */
+.auth-required {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+}
+
+.auth-card {
+    text-align: center;
+    background: white;
+    padding: 3rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-width: 400px;
+}
+
+.auth-card h2 {
+    color: #333;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+
+.auth-card p {
+    color: #666;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+   .header-section {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+   .movies-grid {
+        grid-template-columns: 1fr;
+    }
+
+   .auth-card {
+        margin: 1rem;
+        padding: 2rem 1rem;
+    }
+}
+</style>
 {% endblock %}
