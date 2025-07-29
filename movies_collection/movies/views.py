@@ -3,9 +3,6 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .models import Genre, Director, Movie
 from .forms import GenreForm, DirectorForm, MovieForm
 
-# ---------------------------
-# GENRE VIEWS
-# ---------------------------
 
 class GenreListView(ListView):
     model = Genre
@@ -35,10 +32,6 @@ class GenreDeleteView(DeleteView):
     success_url = reverse_lazy('genre_list')
 
 
-# ---------------------------
-# DIRECTOR VIEWS
-# ---------------------------
-
 class DirectorListView(ListView):
     model = Director
     template_name = 'movies/director_list.html'
@@ -67,10 +60,6 @@ class DirectorDeleteView(DeleteView):
     success_url = reverse_lazy('director_list')
 
 
-# ---------------------------
-# MOVIE VIEWS
-# ---------------------------
-
 class MovieListView(ListView):
     model = Movie
     template_name = 'movies/movie_list.html'
@@ -86,10 +75,6 @@ class MovieCreateView(CreateView):
     form_class = MovieForm
     template_name = 'movies/movie_form.html'
     success_url = reverse_lazy('movie_list')
-
-    # handle file upload
-    def form_valid(self, form):
-        return super().form_valid(form)
 
 class MovieUpdateView(UpdateView):
     model = Movie
