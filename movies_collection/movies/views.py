@@ -78,29 +78,29 @@ class MovieListView(ListView):
     context_object_name = 'movies'
 
     def get_queryset(self):
-        query = self.request.GET.get('q')
-        sort = self.request.GET.get('sort')
-        direction = self.request.GET.get('direction', 'asc')  # default: ზრდადი
+        query = self.request.GET.get('q') #q=საძიებო სიტყვა
+        sort = self.request.GET.get('sort') #რომელი ველის მიხედვით უნდა დასორტირდეს
+        direction = self.request.GET.get('direction', 'asc')  #default-ად არის ზრდადი
         qs = super().get_queryset()
 
-        if query:
+        if query: #თუ შეგვყავს საძიებო სიტყვა, იფილტრება თუ სადმე შესაბამისი ჩანაწერი მოიძებნა. icontains მიუთითებს, რომ არ ექნება მნიშვნელობა საძიებო ჩანაწერი capital letter-ებით გაკეთდება თუ lower case.
             qs = qs.filter(
                 Q(title__icontains=query) |
                 Q(description__icontains=query) |
                 Q(genre__name__icontains=query) |
                 Q(director__name__icontains=query)
-            )
+            ) 
 
-        if sort in ['title', 'release_year', 'genre', 'director']:
+        if sort in ['title', 'release_year', 'genre', 'director']: #სორტირება მოთხოვნილი ველების მიხედვით
             if sort == 'genre':
-                order_field = 'genre__name'
+                order_field = 'genre__name' #რადგან genre და director არის foreign key-ები, რაც ბაზაში ციფრებით აღინიშნება, უშუალოდ სახელზე მისაწვდომად და ველის სორტირებისთვის ვიყენებთ ორმაგ ხაზს, double underscore
             elif sort == 'director':
                 order_field = 'director__name'
             else:
                 order_field = sort
 
             if direction == 'desc':
-                order_field = '-' + order_field
+                order_field = '-' + order_field # "-" აღნიშნავს კლებადობით დალაგებას
 
             qs = qs.order_by(order_field)
 
