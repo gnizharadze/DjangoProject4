@@ -2,7 +2,11 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Genre, Director, Movie
 from .forms import GenreForm, DirectorForm, MovieForm
+from django.db.models import Q
 
+# ---------------------------
+# GENRE VIEWS
+# ---------------------------
 
 class GenreListView(ListView):
     model = Genre
@@ -32,6 +36,10 @@ class GenreDeleteView(DeleteView):
     success_url = reverse_lazy('genre_list')
 
 
+# ---------------------------
+# DIRECTOR VIEWS
+# ---------------------------
+
 class DirectorListView(ListView):
     model = Director
     template_name = 'movies/director_list.html'
@@ -60,10 +68,43 @@ class DirectorDeleteView(DeleteView):
     success_url = reverse_lazy('director_list')
 
 
+# ---------------------------
+# MOVIE VIEWS
+# ---------------------------
+
 class MovieListView(ListView):
     model = Movie
     template_name = 'movies/movie_list.html'
     context_object_name = 'movies'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q') #q=საძიებო სიტყვა
+        sort = self.request.GET.get('sort') #რომელი ველის მიხედვით უნდა დასორტირდეს
+        direction = self.request.GET.get('direction', 'asc')  #default-ად არის ზრდადი
+        qs = super().get_queryset()
+
+        if query: #თუ შეგვყავს საძიებო სიტყვა, იფილტრება თუ სადმე შესაბამისი ჩანაწერი მოიძებნა. icontains მიუთითებს, რომ არ ექნება მნიშვნელობა საძიებო ჩანაწერი capital letter-ებით გაკეთდება თუ lower case.
+            qs = qs.filter(
+                Q(title__icontains=query) |
+                Q(description__icontains=query) |
+                Q(genre__name__icontains=query) |
+                Q(director__name__icontains=query)
+            ) 
+
+        if sort in ['title', 'release_year', 'genre', 'director']: #სორტირება მოთხოვნილი ველების მიხედვით
+            if sort == 'genre':
+                order_field = 'genre__name' #რადგან genre და director არის foreign key-ები, რაც ბაზაში ციფრებით აღინიშნება, უშუალოდ სახელზე მისაწვდომად და ველის სორტირებისთვის ვიყენებთ ორმაგ ხაზს, double underscore
+            elif sort == 'director':
+                order_field = 'director__name'
+            else:
+                order_field = sort
+
+            if direction == 'desc':
+                order_field = '-' + order_field # "-" აღნიშნავს კლებადობით დალაგებას
+
+            qs = qs.order_by(order_field)
+
+        return qs
 
 class MovieDetailView(DetailView):
     model = Movie
@@ -76,6 +117,10 @@ class MovieCreateView(CreateView):
     template_name = 'movies/movie_form.html'
     success_url = reverse_lazy('movie_list')
 
+    # handle file upload
+    def form_valid(self, form):
+        return super().form_valid(form)
+
 class MovieUpdateView(UpdateView):
     model = Movie
     form_class = MovieForm
@@ -86,3 +131,4 @@ class MovieDeleteView(DeleteView):
     model = Movie
     template_name = 'movies/movie_confirm_delete.html'
     success_url = reverse_lazy('movie_list')
+
