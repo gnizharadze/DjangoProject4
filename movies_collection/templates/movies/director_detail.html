@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'movies/base.html' %}
 {% block title %}Director: {{ director.name }}{% endblock %}
 
@@ -64,3 +65,18 @@
     }
 </style>
 {% endblock %}
+=======
+{% extends 'movies/base.html' %}
+{% block title %}Director: {{ director.name }}{% endblock %}
+
+{% block content %}
+<h1>Director: {{ director.name }}</h1>
+
+<p><strong>Birth Date:</strong> {{ director.birth_date }}</p>
+<p><strong>Nationality:</strong> {{ director.nationality }}</p>
+
+<a href="{% url 'director_edit' director.pk %}" class="btn btn-primary">Edit</a>
+<a href="{% url 'director_delete' director.pk %}" class="btn btn-danger">Delete</a>
+<a href="{% url 'director_list' %}" class="btn btn-secondary">Back to list</a>
+{% endblock %}
+>>>>>>> 4f68607c009084eaff717179e7c65302565faca6

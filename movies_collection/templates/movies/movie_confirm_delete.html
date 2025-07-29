@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'movies/base.html' %}
 {% block title %}Delete Movie{% endblock %}
 
@@ -45,3 +46,18 @@
     }
 </style>
 {% endblock %}
+=======
+{% extends 'movies/base.html' %}
+{% block title %}Delete Movie{% endblock %}
+
+{% block content %}
+<h1>Delete Movie</h1>
+<p>Are you sure you want to delete "{{ object }}"?</p>
+
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">Yes, delete</button>
+  <a href="{% url 'movie_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}
+>>>>>>> 4f68607c009084eaff717179e7c65302565faca6

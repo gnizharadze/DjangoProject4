@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 """
 WSGI movies_collection for movies_collection project.
 
@@ -14,3 +15,21 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'movies_collection.settings')
 
 application = get_wsgi_application()
+=======
+"""
+WSGI config for movies_collection project.
+
+It exposes the WSGI callable as a module-level variable named ``application``.
+
+For more information on this file, see
+https://docs.djangoproject.com/en/5.2/howto/deployment/wsgi/
+"""
+
+import os
+
+from django.core.wsgi import get_wsgi_application
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'movies_collection.settings')
+
+application = get_wsgi_application()
+>>>>>>> 4f68607c009084eaff717179e7c65302565faca6

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'movies/base.html' %}
 {% block title %}{{ movie.title }}{% endblock %}
 
@@ -78,3 +79,24 @@
     }
 </style>
 {% endblock %}
+=======
+{% extends 'movies/base.html' %}
+{% block title %}{{ movie.title }}{% endblock %}
+
+{% block content %}
+<h1>{{ movie.title }} ({{ movie.release_year }})</h1>
+
+{% if movie.poster %}
+  <img src="{{ movie.poster.url }}" alt="{{ movie.title }} poster" class="img-fluid mb-3" style="max-width: 300px;">
+{% endif %}
+
+<p><strong>Genre:</strong> {{ movie.genre }}</p>
+<p><strong>Director:</strong> {{ movie.director }}</p>
+<p><strong>Description:</strong> {{ movie.description|linebreaks }}</p>
+<p><strong>Watched:</strong> {% if movie.watched %}Yes{% else %}No{% endif %}</p>
+
+<a href="{% url 'movie_edit' movie.pk %}" class="btn btn-primary">Edit</a>
+<a href="{% url 'movie_delete' movie.pk %}" class="btn btn-danger">Delete</a>
+<a href="{% url 'movie_list' %}" class="btn btn-secondary">Back to list</a>
+{% endblock %}
+>>>>>>> 4f68607c009084eaff717179e7c65302565faca6

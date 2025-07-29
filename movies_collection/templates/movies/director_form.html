@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'movies/base.html' %}
 {% block title %}{% if form.instance.pk %}Edit Director{% else %}Add Director{% endif %}{% endblock %}
 
@@ -113,3 +114,19 @@
     }
 </style>
 {% endblock %}
+=======
+{% extends 'movies/base.html' %}
+{% block title %}{% if form.instance.pk %}Edit Director{% else %}Add Director{% endif %}{% endblock %}
+
+{% block content %}
+<h1>{% if form.instance.pk %}Edit Director{% else %}Add Director{% endif %}</h1>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+
+  <button type="submit" class="btn btn-success">Save</button>
+  <a href="{% url 'director_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}
+>>>>>>> 4f68607c009084eaff717179e7c65302565faca6

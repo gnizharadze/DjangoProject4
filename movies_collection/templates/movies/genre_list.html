@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'movies/base.html' %}
 {% block title %}Genres{% endblock %}
 
@@ -57,3 +58,25 @@
     }
 </style>
 {% endblock %}
+=======
+{% extends 'movies/base.html' %}
+{% block title %}Genres{% endblock %}
+
+{% block content %}
+<h1>Genres</h1>
+<a href="{% url 'genre_add' %}" class="btn btn-primary mb-3">Add New Genre</a>
+<ul class="list-group">
+  {% for genre in genres %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <a href="{% url 'genre_detail' genre.pk %}">{{ genre.name }}</a>
+      <span>
+        <a href="{% url 'genre_edit' genre.pk %}" class="btn btn-sm btn-secondary">Edit</a>
+        <a href="{% url 'genre_delete' genre.pk %}" class="btn btn-sm btn-danger">Delete</a>
+      </span>
+    </li>
+  {% empty %}
+    <li class="list-group-item">No genres found.</li>
+  {% endfor %}
+</ul>
+{% endblock %}
+>>>>>>> 4f68607c009084eaff717179e7c65302565faca6
