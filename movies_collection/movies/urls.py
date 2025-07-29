@@ -23,3 +23,4 @@ urlpatterns = [
     path('movies/<int:pk>/edit/', views.MovieUpdateView.as_view(), name='movie_edit'),
     path('movies/<int:pk>/delete/', views.MovieDeleteView.as_view(), name='movie_delete'),
 ]
+
